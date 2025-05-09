@@ -10,19 +10,18 @@
 <body>
   <header>
     <div class="logo-titulo">
-      <img src="../img/logo.png" alt="Logo Raconto">
+      <img src="{% static 'img/logo.png' %}" alt="Logo Raconto">
       <div>
         <h1>Raconto</h1>
         <h2>Sabores que perduran en el tiempo</h2>
       </div>
     </div>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="{% url 'mi-cuenta' %}">Ir a Mi Cuenta</a>
-      <a href="mi-reservas.html">Mis reservas</a>
-      <a href="quienes-somos.html">Quiénes somos</a>
-      <a href="pdf/carta-raconto.pdf" target="_blank">Nuestra carta</a>
-    </nav>
+     <nav class="nav-principal">
+        <a href="{% url 'index' %}" class="nav-link">Inicio</a>
+        <a href="{% url 'mi-cuenta' %}" class="nav-link">Mi Cuenta</a>
+        <a href="{% url 'mis-reservas' %}" class="nav-link">Reservas</a>
+        <a href="{% url 'quienes-somos' %}" class="nav-link active">Quiénes Somos</a>
+      </nav>
   </header>
 
   <main class="quienes-somos-container fondo-gastronomico">
@@ -89,7 +88,7 @@
       <p>Teléfonos: +56 9 1234 5678 / +56 2 2345 6789</p>
     </div>
     <div class="logo-footer">
-      <img src="../img/logo.png" alt="Logo Raconto">
+      <img src="{% static 'img/logo.png' %}" alt="Logo Raconto">
     </div>
   </footer>
 </body>
