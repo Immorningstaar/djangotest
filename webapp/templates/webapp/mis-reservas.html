@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Reservas - Raconto</title>
-  <link rel="stylesheet" href="css/mi-reservas.css">
+  <link rel="stylesheet" href="{% static 'css/mi-reservas.css' %}">
 </head>
 <body>
   <div class="reservas-container">
@@ -25,15 +25,31 @@
           <input type="date" id="fecha" required>
         </div>
         
-        <div class="form-group">
-          <label for="hora">Hora:</label>
-          <select id="hora" required>
-            <option value="">Seleccione hora</option>
-            <option value="12:00">12:00 PM</option>
-            <option value="13:00">1:00 PM</option>
-            <!-- Más horas... -->
-          </select>
-        </div>
+      <div class="form-group">
+  <label for="hora">Hora:</label>
+  <select id="hora" required>
+    <option value="">Seleccione hora</option>
+    <option value="12:00">12:00 PM</option>
+    <option value="12:30">12:30 PM</option>
+    <option value="13:00">1:00 PM</option>
+    <option value="13:30">1:30 PM</option>
+    <option value="14:00">2:00 PM</option>
+    <option value="14:30">2:30 PM</option>
+    <option value="15:00">3:00 PM</option>
+    <option value="15:30">3:30 PM</option>
+    <option value="16:00">4:00 PM</option>
+    <option value="16:30">4:30 PM</option>
+    <option value="17:00">5:00 PM</option>
+    <option value="17:30">5:30 PM</option>
+    <option value="18:00">6:00 PM</option>
+    <option value="18:30">6:30 PM</option>
+    <option value="19:00">7:00 PM</option>
+    <option value="19:30">7:30 PM</option>
+    <option value="20:00">8:00 PM</option>
+    <option value="20:30">8:30 PM</option>
+    <option value="21:00">9:00 PM</option>
+  </select>
+</div>
         
         <div class="form-group">
           <label for="personas">Número de personas:</label>
@@ -73,11 +89,11 @@
     </div>
   </div>
   <div class="reserva-footer">
-    <a href="index.html" class="btn-volver">Volver al Inicio</a>
+    <a href="{% url 'index' %}" class="btn-volver">Volver al Inicio</a>
     <div class="reserva-confirmada" id="reservaConfirmada" style="display: none;">
       Reserva confirmada a nombre de: <span id="nombreUsuarioReserva"></span>
     </div>
   </div>
-  <script src="js/mi-reservas.js"></script>
+  <script src="{% static 'js/mis-reservas.js' %}"></script>
 </body>
 </html>

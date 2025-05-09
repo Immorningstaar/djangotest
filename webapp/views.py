@@ -8,3 +8,6 @@ def mi_cuenta(request):
 
 def quienes_somos(request):
     return render(request, 'webapp/quienes-somos.html')  # Renderiza quienes-somos.html
+
+def mis_reservas(request):
+    return render(request, 'webapp/mis-reservas.html')
