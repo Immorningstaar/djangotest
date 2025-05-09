@@ -1,0 +1,314 @@
+/* RESET BÁSICO */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fffefb;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* HEADER */
+  /* Estilos generales del header */
+header {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Playfair Display', serif; /* Elegante para gastronomía */
+}
+
+/* Contenedor del logo + texto */
+.logo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease;
+}
+
+.logo-titulo:hover {
+  transform: scale(1.02);
+}
+
+.logo-titulo img {
+  width: 70px;
+  height: auto;
+  border-radius: 50%;
+  border: 2px solid #e8c07d;
+  padding: 3px;
+}
+
+/* Texto del título */
+.logo-titulo h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #4e1e00;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.logo-titulo h2 {
+  margin: 0;
+  font-size: 14px;
+  color: #9c6b3a;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Estilos para la navegación */
+nav {
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #4e1e00;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 12px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover elegante */
+nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #e8c07d;
+  transition: width 0.3s ease;
+}
+
+nav a:hover {
+  color: #e8c07d;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+
+
+/* Responsive para tablets/móviles */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 15px 10px;
+  }
+
+  .logo-titulo {
+    margin-bottom: 15px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  nav a {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
+  
+  /* GALERÍA */
+
+  .titulo-galeria {
+    position: absolute; /* Lo posiciona encima de las imágenes */
+    top: 20%; /* Lo centra verticalmente */
+    left: 50%; /* Lo centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajuste fino para centrado perfecto */
+    text-align: center;
+    font-size: 26px;
+    color: #4e1e00;
+    font-weight: bold;
+    animation: fadeIn 1s ease-in-out;
+    z-index: 10; /* Asegura que esté por encima de las imágenes */
+    background-color: rgba(255, 255, 255, 0.7); /* Fondo semitransparente para mejor legibilidad */
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.galeria {
+    position: relative; /* Necesario para que el título absoluto funcione dentro de esta sección */
+    margin-top: 40px; /* Mantiene el espacio superior que ya tenías */
+}
+  .galeria {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 40px;
+    background-color: #fff6ee;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  .galeria img {
+    width: 30%;
+    min-width: 250px;
+    max-width: 400px;
+    border-radius: 10px;
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+  }
+  
+  .galeria img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* INSTAGRAM LINK */
+  .instagram-link {
+    text-align: center;
+    margin: 30px 0;
+  }
+  
+  .instagram-link a {
+    text-decoration: none;
+    background-color: #e1306c;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .instagram-link a:hover {
+    background-color: #c12358;
+  }
+  
+  /* FOOTER */
+/* Estilos para el footer */
+footer {
+  background-color: #4e1e00; /* Color café oscuro acorde a la gastronomía */
+  color: #fff;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+}
+
+.Quienes-somos {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 300;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #e8c07d;
+  border-right: 3px solid #e8c07d;
+}
+
+.info-contacto {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.info-contacto p {
+  margin: 0;
+  font-size: 16px;
+  position: relative;
+  padding: 0 15px;
+}
+
+.info-contacto p:not(:last-child)::after {
+  content: "•";
+  position: absolute;
+  right: -15px;
+  color: #e8c07d;
+}
+
+.logo-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logo-footer img {
+  max-width: 120px;
+  filter: brightness(0) invert(1); /* Convierte el logo a blanco */
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.logo-footer img:hover {
+  opacity: 1;
+}
+
+/* Efecto hover para los elementos de contacto */
+.info-contacto p:hover {
+  color: #e8c07d;
+  transition: color 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .Quienes-somos {
+    font-size: 16px;
+    padding: 15px;
+  }
+  
+  .info-contacto {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .info-contacto p:not(:last-child)::after {
+    display: none;
+  }
+}
+/* Estado de sesión - Esquina superior derecha */
+.user-status-container {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  text-align: right;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+#userNameDisplay {
+  margin-right: 8px;
+}
+
+#logoutLink {
+  color: #f1c40f;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+#logoutLink:hover {
+  text-decoration: underline;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+  .user-status-container {
+    position: static;
+    text-align: center;
+    margin-bottom: 10px;
+    background-color: transparent;
+  }
+}

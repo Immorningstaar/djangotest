@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Reservas - Raconto</title>
+  <link rel="stylesheet" href="css/mi-reservas.css">
+</head>
+<body>
+  <div class="reservas-container">
+    <h1>Mis Reservas en Raconto</h1>
+    
+    <div class="tabs">
+      <button class="tab active" data-tab="nueva-reserva">Nueva Reserva</button>
+      <button class="tab" data-tab="reservas-activas">Reservas Activas</button>
+      <button class="tab" data-tab="historial">Historial</button>
+    </div>
+    
+    <!-- Formulario de Nueva Reserva -->
+    <div id="nueva-reserva" class="tab-content active">
+      <form id="reservaForm">
+        <div class="form-group">
+          <label for="fecha">Fecha:</label>
+          <input type="date" id="fecha" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="hora">Hora:</label>
+          <select id="hora" required>
+            <option value="">Seleccione hora</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="13:00">1:00 PM</option>
+            <!-- Más horas... -->
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="personas">Número de personas:</label>
+          <input type="number" id="personas" min="1" max="20" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="sucursal">Sucursal:</label>
+          <select id="sucursal" required>
+            <option value="">Seleccione sucursal</option>
+            <option value="los-andes">Los Andes</option>
+            <option value="san-felipe">San Felipe</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="comentarios">Comentarios adicionales:</label>
+          <textarea id="comentarios" rows="3"></textarea>
+        </div>
+        
+        <button type="submit">Reservar</button>
+      </form>
+    </div>
+    
+    <!-- Reservas Activas -->
+    <div id="reservas-activas" class="tab-content">
+      <div class="reservas-list" id="reservas-activas-list">
+        <!-- Las reservas se cargarán dinámicamente con JS -->
+      </div>
+    </div>
+    
+    <!-- Historial de Reservas -->
+    <div id="historial" class="tab-content">
+      <div class="reservas-list" id="historial-reservas-list">
+        <!-- El historial se cargará dinámicamente con JS -->
+      </div>
+    </div>
+  </div>
+  <div class="reserva-footer">
+    <a href="index.html" class="btn-volver">Volver al Inicio</a>
+    <div class="reserva-confirmada" id="reservaConfirmada" style="display: none;">
+      Reserva confirmada a nombre de: <span id="nombreUsuarioReserva"></span>
+    </div>
+  </div>
+  <script src="js/mi-reservas.js"></script>
+</body>
+</html>

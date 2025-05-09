@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raconto</title>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+
+
+<script>
+  // Verificar si viene de un login exitoso
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('fromLogin')) {
+    alert('Sesión iniciada correctamente');
+    // Limpiar parámetro de URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
+<body>
+
+  <header>
+
+    <div id="proximaReserva" style="display: none;">
+      <h3>Tu próxima reserva</h3>
+      <div id="detalleProximaReserva"></div>
+      <a href="mi-reservas/mi-reservas.html">Ver todas mis reservas</a>
+    </div>
+    
+    <script>
+      // Mostrar próxima reserva si está logueado
+      document.addEventListener('DOMContentLoaded', function() {
+        const usuario = JSON.parse(localStorage.getItem('raconto_currentUser'));
+        if (usuario) {
+          const reservas = JSON.parse(localStorage.getItem('raconto_reservas')) || [];
+          const reservasUsuario = reservas.filter(
+            r => r.usuarioEmail === usuario.email && r.estado !== 'cancelada'
+          ).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+          
+          if (reservasUsuario.length > 0) {
+            const proxima = reservasUsuario[0];
+            const detalle = document.getElementById('detalleProximaReserva');
+            detalle.innerHTML = `
+              <p><strong>Fecha:</strong> ${new Date(proxima.fecha).toLocaleDateString('es-ES')}</p>
+              <p><strong>Hora:</strong> ${proxima.hora}</p>
+              <p><strong>Sucursal:</strong> ${proxima.sucursal === 'los-andes' ? 'Los Andes' : 'San Felipe'}</p>
+              <p><strong>Personas:</strong> ${proxima.personas}</p>
+            `;
+            document.getElementById('proximaReserva').style.display = 'block';
+          }
+        }
+      });
+    </script>
+    <div class="user-status">
+      <span id="userNameDisplay"></span>
+      <a href="#" id="logoutLink" style="display: none;">Cerrar sesión</a>
+    </div>
+    
+    <script>
+      // Mostrar usuario logueado
+      document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('raconto_currentUser'));
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const logoutLink = document.getElementById('logoutLink');
+        const accountLink = document.querySelector('nav a[href="mi-cuenta/mi-cuenta.html"]');
+    
+        if (currentUser) {
+          userNameDisplay.textContent = `Hola, ${currentUser.name}`;
+          logoutLink.style.display = 'inline';
+          if (accountLink) accountLink.style.display = 'none';
+        }
+    
+        logoutLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          localStorage.removeItem('raconto_currentUser');
+          location.reload();
+        });
+      });
+    </script>
+    
+    <div class="logo-titulo">
+      <img src="{% static 'img/logo.png' %}" alt="Logo Raconto" />
+      <div>
+        <h1>Raconto</h1>
+        <h2>Sabores que perduran en el tiempo</h2>
+      </div>
+    </div>
+    <nav>
+      <a href="mi-cuenta.html">Mi cuenta</a>
+      <a href="mi-reservas.html">Mis reservas</a>
+      <a href="quienes-somos.html">Quiénes somos</a> 
+      <a href="pdf/carta-raconto.pdf" target="_blank" download="Carta-Raconto.pdf">Nuestra carta</a>
+    </nav>
+  </header>
+
+  <section class="galeria">
+    <h3 class="titulo-galeria">Momentos Raconto</h3>
+    <img src="{% static 'img/evento.png' %}" alt="evento" />
+    <img src="{% static 'img/interior.png' %}" alt="interior" />
+    <img src="{% static 'img/platos.png' %}" alt="platos" />
+  </section>
+
+  <div class="instagram-link">
+    <a href="https://www.instagram.com/racconto.ok/" target="_blank">Visítanos en Instagram</a>
+  </div>
+
+  <footer>
+    <h3 class="Quienes-somos" >En Raconto, cada plato es una experiencia sensorial que revive la esencia de la cocina de autor, fusionando tradición e innovación con ingredientes frescos y técnicas exquisitas. Nuestro menú, cuidadosamente elaborado</h3>
+    <div class="info-contacto">
+      <p>Santa Rosa #339, Los Andes</p>
+      <p>Combate de las Coimas #206, San Felipe</p>
+      <p>Horarios: 09:30 a 21:30</p>
+      <p>Teléfonos: +56 9 1234 5678 / +56 2 2345 6789</p>
+    </div>
+    <div class="logo-footer">
+      <img src="{% static 'img/logo.png' %}" alt="Logo raconto" />
+    </div>
+  </footer>
+
+</body>
+</html>

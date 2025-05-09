@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiénes Somos - Raconto</title>
+  <link rel="stylesheet" href="css/quienes-somos.css">
+</head>
+<body>
+  <header>
+    <div class="logo-titulo">
+      <img src="../img/logo.png" alt="Logo Raconto">
+      <div>
+        <h1>Raconto</h1>
+        <h2>Sabores que perduran en el tiempo</h2>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="{% url 'mi-cuenta' %}">Ir a Mi Cuenta</a>
+      <a href="mi-reservas.html">Mis reservas</a>
+      <a href="quienes-somos.html">Quiénes somos</a>
+      <a href="pdf/carta-raconto.pdf" target="_blank">Nuestra carta</a>
+    </nav>
+  </header>
+
+  <main class="quienes-somos-container fondo-gastronomico">
+    <section class="portada">
+      <h1>🍽️ Descripción Gastronómica para Raconto – Sabores que Inspiran 🍷</h1>
+    </section>
+
+    <section class="descripcion">
+      <p>En <strong>Raconto</strong>, cada plato es una <em>experiencia sensorial</em> que revive la esencia de la cocina de autor, fusionando tradición e innovación con ingredientes frescos y técnicas exquisitas. Nuestro menú, cuidadosamente elaborado, ofrece:</p>
+    </section>
+
+    <section class="propuesta">
+      <h2>🌟 Nuestra Propuesta Única</h2>
+      <div class="propuesta-item">
+        <h3>Cocina con Alma</h3>
+        <p>Platos que narran historias, desde clásicos reinventados hasta creaciones audaces, siempre con toques artesanales.</p>
+      </div>
+      <div class="propuesta-item">
+        <h3>Sabores Locales, Técnicas Globales</h3>
+        <p>Usamos productos chilenos de temporada (como pescados del Pacífico, carnes de la zona y hierbas aromáticas) con un toque de influencia mediterránea.</p>
+      </div>
+      <div class="propuesta-item">
+        <h3>Ambiente Acogedor</h3>
+        <p>Un espacio donde la presentación y el sabor se unen, ideal para encuentros íntimos, celebraciones o momentos especiales.</p>
+      </div>
+    </section>
+
+    <section class="recomendaciones">
+      <h2>🍷 Recomendaciones que Enamoran</h2>
+      <div class="plato">
+        <h3>Entradas que Despiertan el Paladar</h3>
+        <p>Como nuestro <em>Carpaccio de Res con reducción de vino tinto y rúcula fresca</em>.</p>
+      </div>
+      <div class="plato">
+        <h3>Platos Principales Memorables</h3>
+        <p>Prueba el <em>Risotto de Hongos Salvajes con trufa negra</em> o el <em>Lomo Vetado con puré de raíces andinas</em>.</p>
+      </div>
+      <div class="plato">
+        <h3>Postres Hechiceros</h3>
+        <p>No te resistas al <em>Volcán de Chocolate con helado de vainilla chilena</em>.</p>
+      </div>
+    </section>
+
+    <section class="diferenciadores">
+      <h2>✨ ¿Por Qué Elegirnos?</h2>
+      <ul>
+        <li><strong>Instagrameable</strong>: Cada plato es una obra de arte, lista para ser compartida. 📸</li>
+        <li><strong>Experiencia Personalizada</strong>: Menú adaptable para celíacos, vegetarianos y veganos.</li>
+        <li><strong>Ubicaciones Privilegiadas</strong>: Encuéntranos en Los Andes y San Felipe, con horarios extendidos para disfrutar sin prisas.</li>
+      </ul>
+    </section>
+
+    <section class="cta">
+      <p>📍 Visítanos y descubre por qué <strong>#Raconto</strong> es más que un restaurante: es un viaje de sabores.</p>
+      <a href="https://www.instagram.com/racconto.ok/" target="_blank" class="instagram-btn">🔗 Síguenos en Instagram</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="info-contacto">
+      <p>Santa Rosa #339, Los Andes</p>
+      <p>Combate de las Coimas #206, San Felipe</p>
+      <p>Horarios: 09:30 a 21:30</p>
+      <p>Teléfonos: +56 9 1234 5678 / +56 2 2345 6789</p>
+    </div>
+    <div class="logo-footer">
+      <img src="../img/logo.png" alt="Logo Raconto">
+    </div>
+  </footer>
+</body>
+</html>
