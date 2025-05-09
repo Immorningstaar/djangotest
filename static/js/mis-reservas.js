@@ -40,10 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const usuario = JSON.parse(localStorage.getItem('raconto_currentUser'));
             if (!usuario) {
-                alert('Debes iniciar sesión para hacer reservas');
-                window.location.href = "{% url 'mi-cuenta' %}";
-                return;
-            }
+    alert('Debes iniciar sesión para hacer reservas');
+    console.log("Redirigiendo a:", APP_URLS.miCuenta);  // Verifica esto en consola
+    window.location.href = APP_URLS.miCuenta;
+    return;
+}
 
             // Validar y crear reserva
             const reserva = {

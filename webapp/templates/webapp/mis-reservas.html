@@ -94,6 +94,14 @@
       Reserva confirmada a nombre de: <span id="nombreUsuarioReserva"></span>
     </div>
   </div>
+ <script>
+    // Correcto - Esto será procesado por Django ANTES de enviarse al navegador
+    const APP_URLS = {
+        miCuenta: "{% url 'mi-cuenta' %}",
+        index: "{% url 'index' %}"
+    };
+    console.log("URLs disponibles:", APP_URLS);  // Para depuración
+</script>
   <script src="{% static 'js/mis-reservas.js' %}"></script>
 </body>
 </html>
