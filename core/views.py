@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import RegistroForm
+from .forms import EditarPerfilForm
 
 def registro(request):
     if request.method == 'POST':
