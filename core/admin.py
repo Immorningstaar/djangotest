@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Comuna, Usuario
+from .models import Usuario, Comuna, Rol
 
 admin.site.register(Comuna)
+admin.site.register(Rol)
 
 @admin.register(Usuario)
 class UsuarioAdmin(UserAdmin):
     list_display = ('rut', 'email', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('rut', 'first_name', 'last_name', 'email')
-    ordering = ('rut',)
+    fieldsets = UserAdmin.fieldsets + (
+        ('Datos adicionales', {'fields': ('rut', 'telefono', 'direccion', 'comuna', 'roles')}),
+    )
