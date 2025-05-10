@@ -36,6 +36,7 @@
     <div id="register" class="tab-content">
       <h2>Crear nueva cuenta</h2>
       <form id="registerForm">
+        {% csrf_token %}
         <div class="form-group">
           <label for="regName">Nombre completo</label>
           <input type="text" id="regName" required>
@@ -113,6 +114,8 @@
   <script src="{% static 'js/mi-cuenta.js' %}"></script>
   <script>
     const URL_MI_CUENTA = "{% url 'mi-cuenta' %}";
+
+  
     
     // Validación adicional para el teléfono
     document.getElementById('registerForm').addEventListener('submit', function(e) {

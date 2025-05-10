@@ -1,6 +1,6 @@
-from django.db import models  # ¡Esta línea faltaba!
+from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
-from django.core.validators import RegexValidator  # Opcional para validar RUT
+from django.core.validators import RegexValidator
 
 class Comuna(models.Model):
     nombre = models.CharField(max_length=50)
@@ -8,7 +8,7 @@ class Comuna(models.Model):
     def __str__(self):
         return self.nombre
 
-class Rol(Group):  # Hereda de Group para roles
+class Rol(Group):
     class Meta:
         proxy = True
         verbose_name = 'Rol'
@@ -20,12 +20,14 @@ class Usuario(AbstractUser):
         regex=r'^\d{7,8}-[\dkK]$',
         message="El RUT debe estar en formato 12345678-9"
     )
-    
+    class Meta:
+        db_table = 'USUARIOS'  # Asegúrate que coincida con el nombre que buscas
+        managed = True  
     # Campos personalizados
     rut = models.CharField(
         max_length=12,
         unique=True,
-        validators=[rut_validator],  # Opcional
+        validators=[rut_validator],
         help_text="Ejemplo: 12345678-9"
     )
     telefono = models.CharField(max_length=15, blank=True, null=True)
