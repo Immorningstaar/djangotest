@@ -24,53 +24,52 @@ document.addEventListener('DOMContentLoaded', function() {
         passwordInput.addEventListener('input', validatePassword);
     }
 
-    // 3. Formulario de Registro
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            if (!validatePassword() || !validateConfirmPassword()) {
-                return;
-            }
+ // 3. Formulario de Registro
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+    registerForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!validatePassword() || !validateConfirmPassword()) {
+            return;
+        }
 
-            const formData = {
-                action: 'register',
-                name: document.getElementById('regName').value,
-                rut: document.getElementById('regRut').value,
-                email: document.getElementById('regEmail').value,
-                phone: document.getElementById('regPhone').value,
-                role: document.getElementById('regRole').value,
-                password: document.getElementById('regPassword').value
-            };
+        const formData = {
+            action: 'register',
+            name: document.getElementById('regName').value,
+            rut: document.getElementById('regRut').value.replace(/\./g, ''), // Elimina puntos del RUT
+            email: document.getElementById('regEmail').value,
+            phone: document.getElementById('regPhone').value,
+            role: document.getElementById('regRole').value,
+            password: document.getElementById('regPassword').value
+        };
+        
+        try {
+            const response = await fetch('/mi-cuenta/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(formData)
+            });
             
-            try {
-                const response = await fetch('/mi-cuenta/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCSRFToken()
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert('success', `¡Bienvenido ${formData.name}! Redirigiendo...`);
-                    setTimeout(() => {
-                        window.location.href = "/";
-                    }, 1500);
-                } else {
-                    showAlert('error', data.message || 'Error en el registro');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('error', 'Error al conectar con el servidor');
+            const data = await response.json();
+            
+            if (data.success) {
+                showAlert('success', data.message || `¡Bienvenido ${formData.name}! Redirigiendo...`);
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1500);
+            } else {
+                showAlert('error', data.message || 'Error en el registro');
             }
-        });
-    }
-
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('error', 'Error al conectar con el servidor');
+        }
+    });
+}
     // 4. Formulario de Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {

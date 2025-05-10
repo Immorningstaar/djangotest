@@ -1,118 +1,106 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.hashers import make_password
-from core.models import Usuario, Comuna
+from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
 import json
-from django.db import IntegrityError
+from .models import Usuario, Rol, Comuna
 
 @csrf_exempt
 def mi_cuenta(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            action = request.GET.get('action', 'register')
-            
+            action = data.get('action')
+
             if action == 'register':
-                # Validación de campos requeridos
-                required_fields = ['name', 'rut', 'email', 'phone', 'role', 'password']
-                if not all(field in data for field in required_fields):
-                    return JsonResponse({'success': False, 'message': 'Faltan campos requeridos'}, status=400)
-                
+                # Obtener datos del formulario
+                name = data.get('name')
+                rut = data.get('rut')
+                email = data.get('email')
+                phone = data.get('phone')
+                role = data.get('role')
+                password = data.get('password')
+
+                # Validar que el RUT no exista
+                if Usuario.objects.filter(rut=rut).exists():
+                    return JsonResponse({'success': False, 'message': 'El RUT ya está registrado'})
+
+                # Validar que el email no exista
+                if Usuario.objects.filter(email=email).exists():
+                    return JsonResponse({'success': False, 'message': 'El email ya está registrado'})
+
+                # Crear el nuevo usuario
+                user = Usuario.objects.create_user(
+                    rut=rut,
+                    username=email,  # Podrías usar el RUT aquí si prefieres
+                    email=email,
+                    password=password,
+                    first_name=name.split(' ')[0] if name else '',
+                    last_name=' '.join(name.split(' ')[1:]) if name and len(name.split(' ')) > 1 else '',
+                    telefono=phone
+                )
+
+                # Asignar rol si existe
                 try:
-                    # Crear el usuario con AbstractUser
-                    usuario = Usuario.objects.create_user(
-                        username=data['rut'],  # Usamos RUT como username
-                        rut=data['rut'],
-                        email=data['email'],
-                        password=data['password'],
-                        first_name=data['name'].split()[0],
-                        last_name=' '.join(data['name'].split()[1:]) if len(data['name'].split()) > 1 else '',
-                        telefono=f"+569{data['phone']}"
-                    )
-                    
-                    # Asignar rol (asumiendo que ya existen los roles en la base de datos)
-                    from django.contrib.auth.models import Group
-                    try:
-                        rol = Group.objects.get(name=data['role'])
-                        usuario.groups.add(rol)
-                    except Group.DoesNotExist:
-                        pass
-                    
+                    rol_obj = Rol.objects.get(name=role)
+                    user.roles.add(rol_obj)
+                except Rol.DoesNotExist:
+                    pass  # O manejar el error si el rol es requerido
+
+                # Autenticar y loguear al usuario directamente
+                authenticated_user = authenticate(request, rut=rut, password=password)
+                if authenticated_user is not None:
+                    login(request, authenticated_user)
                     return JsonResponse({
-                        'success': True,
-                        'message': 'Usuario registrado exitosamente'
+                        'success': True, 
+                        'message': f'¡Bienvenido {name}!'
                     })
-                
-                except IntegrityError as e:
-                    if 'rut' in str(e):
-                        return JsonResponse({'success': False, 'message': 'El RUT ya está registrado'}, status=400)
-                    elif 'email' in str(e):
-                        return JsonResponse({'success': False, 'message': 'El email ya está registrado'}, status=400)
-                    else:
-                        return JsonResponse({'success': False, 'message': 'Error al registrar usuario'}, status=500)
-                
-                except Exception as e:
-                    return JsonResponse({'success': False, 'message': str(e)}, status=500)
-            
+                else:
+                    return JsonResponse({
+                        'success': True, 
+                        'message': 'Registro exitoso. Por favor inicia sesión.'
+                    })
+
             elif action == 'login':
-                try:
-                    # Autenticación con RUT
-                    user = authenticate(
-                        request,
-                        username=data['email'],  # o data['rut'] si prefieres
-                        password=data['password']
-                    )
-                    
-                    if user is not None:
-                        login(request, user)
-                        return JsonResponse({
-                            'success': True,
-                            'message': 'Inicio de sesión exitoso',
-                            'user': {
-                                'name': user.get_full_name(),
-                                'email': user.email
-                            }
-                        })
-                    else:
-                        return JsonResponse({
-                            'success': False,
-                            'message': 'Credenciales incorrectas'
-                        }, status=401)
+                rut = data.get('email')  # Ojo: en tu formulario usas email pero el USERNAME_FIELD es rut
+                password = data.get('password')
                 
-                except Exception as e:
+                user = authenticate(request, rut=rut, password=password)
+                
+                if user is not None:
+                    login(request, user)
                     return JsonResponse({
-                        'success': False,
-                        'message': 'Error en el inicio de sesión'
-                    }, status=500)
-            
-            elif action == 'recover':
-                # Lógica simplificada de recuperación
-                try:
-                    usuario = Usuario.objects.get(email=data['email'])
-                    # Aquí deberías generar y enviar un token de recuperación
-                    return JsonResponse({
-                        'success': True,
-                        'message': 'Se ha enviado un enlace de recuperación a tu email'
+                        'success': True, 
+                        'message': 'Inicio de sesión exitoso'
                     })
-                except Usuario.DoesNotExist:
+                else:
                     return JsonResponse({
-                        'success': False,
+                        'success': False, 
+                        'message': 'RUT o contraseña incorrectos'
+                    })
+
+            elif action == 'recover':
+                # Implementar lógica de recuperación
+                email = data.get('email')
+                if Usuario.objects.filter(email=email).exists():
+                    # Aquí iría la lógica para enviar el correo de recuperación
+                    return JsonResponse({
+                        'success': True, 
+                        'message': 'Instrucciones enviadas a tu email'
+                    })
+                else:
+                    return JsonResponse({
+                        'success': False, 
                         'message': 'Email no registrado'
-                    }, status=404)
-            
-        except json.JSONDecodeError:
-            return JsonResponse({
-                'success': False,
-                'message': 'Error en el formato de los datos'
-            }, status=400)
+                    })
+
         except Exception as e:
             return JsonResponse({
-                'success': False,
-                'message': 'Error interno del servidor'
-            }, status=500)
-    
+                'success': False, 
+                'message': f'Error en el servidor: {str(e)}'
+            })
+
     return JsonResponse({
-        'success': False,
+        'success': False, 
         'message': 'Método no permitido'
-    }, status=405)
+    })
