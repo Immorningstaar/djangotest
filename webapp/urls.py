@@ -2,9 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),  # Ruta principal
-    path('mi-cuenta/', views.mi_cuenta, name='mi-cuenta'),
-    path('quienes-somos/', views.quienes_somos, name='quienes-somos'),
+    path('', views.inicio, name='inicio'),
+    path('quienes-somos/', views.quienes_somos, name='quienes'),
+    path('registro/', views.registro, name='registro'),
+    path('login/', views.login_view, name='login'),
+    path('cerrar-sesion/', views.cerrar_sesion, name='cerrar_sesion'),
+    path('mi-perfil/', views.mi_perfil, name='mi_perfil'),
     path('mis-reservas/', views.mis_reservas, name='mis-reservas'),
-    # Eliminamos admin/ y el include circular
+    path('administrar/usuarios/', views.listar_usuarios, name='listar_usuarios'),
 ]

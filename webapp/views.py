@@ -1,74 +1,111 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
-import json
-from core.models import Usuario
+from django.contrib.auth.models import User
+from django.contrib import messages
 
-# Vistas existentes
-def index(request):
-    return render(request, 'webapp/index.html')
+def inicio(request):
+    context = {
+        'usuario_nombre': request.user.get_full_name() if request.user.is_authenticated else None,
+        'usuario_rol': request.user.profile.rol if hasattr(request.user, 'profile') else None
+    }
+    return render(request, 'index.html', context)
 
-@csrf_exempt
-def mi_cuenta(request):
+def quienes_somos(request):
+    return render(request, 'quienes_somos.html')
+
+def registro(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            action = request.GET.get('action', 'register')
-            
-            if action == 'register':
-                # Validación de campos
-                required_fields = ['name', 'rut', 'email', 'phone', 'role', 'password']
-                if not all(field in data for field in required_fields):
-                    return JsonResponse({'success': False, 'message': 'Faltan campos requeridos'}, status=400)
-                
-                try:
-                    # Crear usuario
-                    user = Usuario.objects.create_user(
-                        username=data['rut'],
-                        rut=data['rut'],
-                        email=data['email'],
-                        password=data['password'],
-                        first_name=data['name'].split()[0],
-                        last_name=' '.join(data['name'].split()[1:]) if len(data['name'].split()) > 1 else '',
-                        telefono=f"+569{data['phone']}"
-                    )
-                    
-                    # Asignar rol
-                    from django.contrib.auth.models import Group
-                    try:
-                        group = Group.objects.get(name=data['role'])
-                        user.groups.add(group)
-                    except Group.DoesNotExist:
-                        pass
-                    
-                    return JsonResponse({'success': True, 'message': 'Registro exitoso'})
-                
-                except Exception as e:
-                    return JsonResponse({'success': False, 'message': str(e)}, status=400)
-            
-            elif action == 'login':
-                user = authenticate(request, username=data['email'], password=data['password'])
-                if user is not None:
-                    login(request, user)
-                    return JsonResponse({'success': True, 'message': 'Login exitoso'})
-                return JsonResponse({'success': False, 'message': 'Credenciales inválidas'}, status=401)
-            
-            elif action == 'recover':
-                # Lógica de recuperación (simplificada)
-                return JsonResponse({'success': True, 'message': 'Enlace enviado'})
+        # Procesar el formulario de registro
+        nombre = request.POST.get('nombre')
+        apellidos = request.POST.get('apellidos')
+        email = request.POST.get('correo')
+        password = request.POST.get('clave')
+        direccion = request.POST.get('direccion')
+        telefono = request.POST.get('telefono')
+        rol = request.POST.get('rol')
         
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'message': 'Error en los datos'}, status=400)
+        # Validaciones y creación de usuario
+        try:
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=nombre,
+                last_name=apellidos
+            )
+            
+            # Crear perfil extendido (asumiendo que tienes un modelo Profile)
+            profile = Profile.objects.create(
+                user=user,
+                direccion=direccion,
+                telefono=telefono,
+                rol=rol
+            )
+            
+            # Autenticar y loguear al usuario
+            user = authenticate(username=email, password=password)
+            login(request, user)
+            
+            messages.success(request, 'Registro exitoso!')
+            return redirect('inicio')
+            
+        except Exception as e:
+            messages.error(request, f'Error en el registro: {str(e)}')
     
-    # GET request - mostrar template normal
-    return render(request, 'webapp/mi-cuenta.html')
+    return render(request, 'registro.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        user = authenticate(username=email, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('inicio' + '?fromLogin=true')
+        else:
+            messages.error(request, 'Credenciales inválidas')
+    
+    return render(request, 'login.html')
+
+@login_required
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('inicio')
+
+@login_required
+def mi_perfil(request):
+    if request.method == 'POST':
+        # Actualizar datos del perfil
+        user = request.user
+        user.first_name = request.POST.get('nombre')
+        user.last_name = request.POST.get('apellidos')
+        user.email = request.POST.get('email')
+        user.save()
+        
+        if hasattr(user, 'profile'):
+            profile = user.profile
+            profile.direccion = request.POST.get('direccion')
+            profile.telefono = request.POST.get('telefono')
+            profile.save()
+        
+        messages.success(request, 'Perfil actualizado correctamente')
+        return redirect('mi_perfil')
+    
+    return render(request, 'mi_perfil.html')
 
 @login_required
 def mis_reservas(request):
-    return render(request, 'webapp/mis-reservas.html')
+    # Aquí deberías obtener las reservas del usuario actual
+    # reservas = Reserva.objects.filter(usuario=request.user)
+    return render(request, 'mis_reservas.html', {'reservas': []})
 
-def quienes_somos(request):
-    return render(request, 'webapp/quienes-somos.html')
+@login_required
+def listar_usuarios(request):
+    if not request.user.is_superuser and not (hasattr(request.user, 'profile') and request.user.profile.rol == 1):
+        return redirect('inicio')
+    
+    usuarios = User.objects.all()
+    return render(request, 'admin/usuarios.html', {'usuarios': usuarios})
